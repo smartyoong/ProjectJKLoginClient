@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
@@ -26,6 +27,7 @@ namespace LoginClient
         private void LoginButton_Click(object sender, EventArgs e)
         {
             LoginInputForm LoginInputDlg = new LoginInputForm();
+            LoginInputDlg.Owner = this;
             LoginInputDlg.ShowDialog();
         }
         private void ConnectToLoginServer()
@@ -40,12 +42,17 @@ namespace LoginClient
             catch(Exception ex) 
             {
                 MessageBox.Show(ex.Message);
+                this.Close();
             }
         }
         private void DisconnectToLoginServer()
         {
             LoginClientSocket.Shutdown(SocketShutdown.Both);
             LoginClientSocket.Close();
+        }
+        public int SendSocketData(ref byte[] data)
+        {
+            return LoginClientSocket.Send(data);
         }
     }
 
@@ -54,36 +61,21 @@ namespace LoginClient
     {
         // 변수는 아무렇게나 추가 가능
         public LOGIN_CLIENT_PACKET_ID IDNum { get; set; }
-        private byte[] Data = null;
-        private int MessageSize = 0;
         public string StringValue1 { get; set; } = null;
         public string StringValue2 { get; set; } = null;
         public int IntegerValue1 { get; set; } = 0;
+    }
 
-        public void SerializeData()
+    public static class SocketDataSerializer
+    {
+        public static byte[] Serialize<T>(T obj)
         {
-            BinaryFormatter formatter = new BinaryFormatter();
-            MemoryStream stream = new MemoryStream();
-            formatter.Serialize(stream, this);
-            byte[] bytes = stream.ToArray();
-
-            // 데이터 길이 구하기
-            MessageSize = bytes.Length + sizeof(int);
-
-            // 데이터 길이를 바이트 배열로 변환
-            byte[] LengthBytes = BitConverter.GetBytes(MessageSize);
-
-            // 헤더와 데이터 합치기
-            byte[] header = LengthBytes;
-            byte[] packet = new byte[header.Length + bytes.Length];
-            Array.Copy(header, packet, header.Length);
-            Array.Copy(bytes, 0, packet, header.Length, bytes.Length);
-            // 반드시 이게 나중에 들어와야 쓸모없는 값 참조를 안함
-            Data = packet;
+            return JsonSerializer.SerializeToUtf8Bytes(obj);
         }
-        public void GetData(ref byte[] data)
+
+        public static T DeSerialize<T>(byte[] data)
         {
-            data = Data;
+            return JsonSerializer.Deserialize<T>(data);
         }
     }
 }

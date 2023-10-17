@@ -30,8 +30,8 @@
         {
             this.LoginButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.IDTextBox = new System.Windows.Forms.TextBox();
+            this.PWTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.RegistButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -45,6 +45,7 @@
             this.LoginButton.TabIndex = 0;
             this.LoginButton.Text = "로그인";
             this.LoginButton.UseVisualStyleBackColor = true;
+            this.LoginButton.Click += new System.EventHandler(this.LoginButton_Click);
             // 
             // label1
             // 
@@ -55,19 +56,19 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "ID : ";
             // 
-            // textBox1
+            // IDTextBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(56, 12);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(232, 21);
-            this.textBox1.TabIndex = 2;
+            this.IDTextBox.Location = new System.Drawing.Point(56, 12);
+            this.IDTextBox.Name = "IDTextBox";
+            this.IDTextBox.Size = new System.Drawing.Size(232, 21);
+            this.IDTextBox.TabIndex = 2;
             // 
-            // textBox2
+            // PWTextBox
             // 
-            this.textBox2.Location = new System.Drawing.Point(56, 45);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(231, 21);
-            this.textBox2.TabIndex = 3;
+            this.PWTextBox.Location = new System.Drawing.Point(56, 45);
+            this.PWTextBox.Name = "PWTextBox";
+            this.PWTextBox.Size = new System.Drawing.Size(231, 21);
+            this.PWTextBox.TabIndex = 3;
             // 
             // label2
             // 
@@ -95,8 +96,8 @@
             this.ClientSize = new System.Drawing.Size(402, 141);
             this.Controls.Add(this.RegistButton);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.PWTextBox);
+            this.Controls.Add(this.IDTextBox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.LoginButton);
             this.Name = "LoginInputForm";
@@ -110,8 +111,8 @@
 
         private System.Windows.Forms.Button LoginButton;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox IDTextBox;
+        private System.Windows.Forms.TextBox PWTextBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button RegistButton;
     }
