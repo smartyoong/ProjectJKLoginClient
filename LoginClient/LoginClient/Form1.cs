@@ -10,6 +10,7 @@ using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
@@ -75,7 +76,8 @@ namespace LoginClient
 
         public static T DeSerialize<T>(byte[] data)
         {
-            return JsonSerializer.Deserialize<T>(data);
+            var ByteData = new Utf8JsonReader(data);
+            return JsonSerializer.Deserialize<T>(ref ByteData);
         }
     }
 }
