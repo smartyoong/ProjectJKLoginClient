@@ -12,9 +12,14 @@ namespace LoginClient
 {
     public static class MessageDataProcess
     {
-        private static BlockingCollection<LoginSendToClientMessagePacket>? LoginMessageQueue = new BlockingCollection<LoginSendToClientMessagePacket>();
+        private static BlockingCollection<LoginSendToClientMessagePacket> LoginMessageQueue = new BlockingCollection<LoginSendToClientMessagePacket>();
         private readonly static CancellationTokenSource CancelProgress = new CancellationTokenSource();
+        private static LoginClient MasterForm;
 
+        public static void InitMessageDataProcess(LoginClient LoginForm)
+        {
+            MasterForm = LoginForm;
+        }
         public static void BufferToMessageQueue(ref byte[] ReceivedData)
         {
 
@@ -64,7 +69,7 @@ namespace LoginClient
                 {
                     ProcessMessage();
                 }
-            });
+            }, CancelProgress.Token);
         }
 
         public static void Cancel()
@@ -84,7 +89,8 @@ namespace LoginClient
                     MessageBox.Show("ID랑 비밀번호가 일치하지 않습니다.");
                     break;
                 case 2:
-                    MessageBox.Show("로그인 성공");
+                    MasterForm.LoginInputDlg.Close();
+                    MasterForm.LoginSuccess();
                     break;
                 default :
                     MessageBox.Show("알수 없는 버그");

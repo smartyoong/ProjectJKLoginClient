@@ -27,6 +27,8 @@ namespace LoginClient
             string PWString = PWTextBox.Text;
             if (IDString != null && PWString != null)
             {
+                if (!CheckPasswordValid(PWString))
+                    return;
                 LoginMessagePacket Packet = new LoginMessagePacket();
                 Packet.StringValue1 = IDString;
                 Packet.StringValue2 = PWString;
@@ -39,13 +41,15 @@ namespace LoginClient
                 }
             }
         }
-        private void CheckPasswordValid(string PW)
+        private bool CheckPasswordValid(string PW)
         {
             string Pattern = "^[a-zA-Z0-9!@#$%]{8,16}$";
             if (!Regex.IsMatch(PW, Pattern))
             {
                 MessageBox.Show("비밀 번호 형식이 유효하지 않습니다.");
+                return false;
             }
+            return true;
         }
 
         private void PWTextBox_Enter(object sender, EventArgs e)

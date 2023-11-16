@@ -32,73 +32,79 @@ namespace LoginClient
         /// </summary>
         private void InitializeComponent()
         {
-            this.LoginButton = new System.Windows.Forms.Button();
-            this.PatchProgress = new System.Windows.Forms.ProgressBar();
-            this.GameStartButton = new System.Windows.Forms.Button();
-            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
-            this.StatusPictureBox = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.StatusPictureBox)).BeginInit();
-            this.SuspendLayout();
+            LoginButton = new System.Windows.Forms.Button();
+            PatchProgress = new System.Windows.Forms.ProgressBar();
+            GameStartButton = new System.Windows.Forms.Button();
+            webBrowser1 = new System.Windows.Forms.WebBrowser();
+            StatusPictureBox = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)StatusPictureBox).BeginInit();
+            SuspendLayout();
             // 
             // LoginButton
             // 
-            this.LoginButton.Font = new System.Drawing.Font("휴먼엑스포", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.LoginButton.Location = new System.Drawing.Point(593, 12);
-            this.LoginButton.Name = "LoginButton";
-            this.LoginButton.Size = new System.Drawing.Size(195, 37);
-            this.LoginButton.TabIndex = 0;
-            this.LoginButton.Text = "로그인";
-            this.LoginButton.UseVisualStyleBackColor = true;
-            this.LoginButton.Click += new System.EventHandler(this.LoginButton_Click);
+            LoginButton.Font = new System.Drawing.Font("휴먼엑스포", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            LoginButton.Location = new System.Drawing.Point(593, 15);
+            LoginButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            LoginButton.Name = "LoginButton";
+            LoginButton.Size = new System.Drawing.Size(195, 46);
+            LoginButton.TabIndex = 0;
+            LoginButton.Text = "로그인";
+            LoginButton.UseVisualStyleBackColor = true;
+            LoginButton.Click += LoginButton_Click;
             // 
             // PatchProgress
             // 
-            this.PatchProgress.Location = new System.Drawing.Point(12, 371);
-            this.PatchProgress.Name = "PatchProgress";
-            this.PatchProgress.Size = new System.Drawing.Size(565, 67);
-            this.PatchProgress.TabIndex = 1;
+            PatchProgress.Location = new System.Drawing.Point(12, 464);
+            PatchProgress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            PatchProgress.Name = "PatchProgress";
+            PatchProgress.Size = new System.Drawing.Size(565, 84);
+            PatchProgress.TabIndex = 1;
             // 
             // GameStartButton
             // 
-            this.GameStartButton.Font = new System.Drawing.Font("휴먼엑스포", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.GameStartButton.Location = new System.Drawing.Point(593, 371);
-            this.GameStartButton.Name = "GameStartButton";
-            this.GameStartButton.Size = new System.Drawing.Size(194, 66);
-            this.GameStartButton.TabIndex = 2;
-            this.GameStartButton.Text = "게임시작";
-            this.GameStartButton.UseVisualStyleBackColor = true;
+            GameStartButton.Font = new System.Drawing.Font("휴먼엑스포", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            GameStartButton.Location = new System.Drawing.Point(593, 464);
+            GameStartButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            GameStartButton.Name = "GameStartButton";
+            GameStartButton.Size = new System.Drawing.Size(194, 82);
+            GameStartButton.TabIndex = 2;
+            GameStartButton.Text = "게임시작";
+            GameStartButton.UseVisualStyleBackColor = true;
             // 
             // webBrowser1
             // 
-            this.webBrowser1.Location = new System.Drawing.Point(12, 12);
-            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
-            this.webBrowser1.Name = "webBrowser1";
-            this.webBrowser1.Size = new System.Drawing.Size(565, 341);
-            this.webBrowser1.TabIndex = 3;
+            webBrowser1.Location = new System.Drawing.Point(12, 15);
+            webBrowser1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            webBrowser1.MinimumSize = new System.Drawing.Size(20, 25);
+            webBrowser1.Name = "webBrowser1";
+            webBrowser1.Size = new System.Drawing.Size(565, 426);
+            webBrowser1.TabIndex = 3;
             // 
             // StatusPictureBox
             // 
-            this.StatusPictureBox.Location = new System.Drawing.Point(593, 55);
-            this.StatusPictureBox.Name = "StatusPictureBox";
-            this.StatusPictureBox.Size = new System.Drawing.Size(194, 297);
-            this.StatusPictureBox.TabIndex = 4;
-            this.StatusPictureBox.TabStop = false;
+            StatusPictureBox.Location = new System.Drawing.Point(593, 69);
+            StatusPictureBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            StatusPictureBox.Name = "StatusPictureBox";
+            StatusPictureBox.Size = new System.Drawing.Size(194, 371);
+            StatusPictureBox.TabIndex = 4;
+            StatusPictureBox.TabStop = false;
             // 
             // LoginClient
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.StatusPictureBox);
-            this.Controls.Add(this.webBrowser1);
-            this.Controls.Add(this.GameStartButton);
-            this.Controls.Add(this.PatchProgress);
-            this.Controls.Add(this.LoginButton);
-            this.Name = "LoginClient";
-            this.Text = "LoginClient";
-            ((System.ComponentModel.ISupportInitialize)(this.StatusPictureBox)).EndInit();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(800, 562);
+            Controls.Add(StatusPictureBox);
+            Controls.Add(webBrowser1);
+            Controls.Add(GameStartButton);
+            Controls.Add(PatchProgress);
+            Controls.Add(LoginButton);
+            Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            Name = "LoginClient";
+            Text = "LoginClient";
+            FormClosing += MainFormClosing;
+            ((System.ComponentModel.ISupportInitialize)StatusPictureBox).EndInit();
+            ResumeLayout(false);
         }
 
         #endregion

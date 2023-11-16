@@ -21,42 +21,59 @@ namespace LoginClient
     public partial class LoginClient : Form
     {
         const int BufferSize = 1024;
+        bool IsLogOn = false;
         byte[] SocketBuffer = new byte[BufferSize];
         private static CancellationTokenSource LoginCancellationTokenSource;
+        public LoginInputForm LoginInputDlg = new LoginInputForm();
         public LoginClient()
         {
             InitializeComponent();
-            ConnectToLoginServer();
             LoginCancellationTokenSource = new CancellationTokenSource();
-            MessageDataProcess.Run();
+            MessageDataProcess.InitMessageDataProcess(this);
+            ConnectToLoginServer();
         }
 
         private void LoginButton_Click(object sender, EventArgs e)
         {
-            LoginInputForm LoginInputDlg = new LoginInputForm();
-            LoginInputDlg.Owner = this;
-            LoginInputDlg.ShowDialog();
+            if(!IsLogOn) 
+            {
+                LoginInputDlg.Owner = this;
+                LoginInputDlg.ShowDialog();
+            }
         }
-        private void ConnectToLoginServer()
+        private async void ConnectToLoginServer()
         {
             LoginClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             IPAddress IPAddr = IPAddress.Parse("115.136.46.23");
-            IPEndPoint IPEnd = new IPEndPoint(IPAddr,11220);
+            IPEndPoint IPEnd = new IPEndPoint(IPAddr, 11220);
             try
             {
                 LoginClientSocket.Connect(IPEnd);
-                Task.Run(() => RecvData(LoginCancellationTokenSource.Token));
+                Task MessageTask = MessageDataProcess.Run();
+                Task RecvTask = Task.Run(() => RecvData(LoginCancellationTokenSource.Token), LoginCancellationTokenSource.Token);
+                await Task.WhenAll(RecvTask, MessageTask);
             }
-            catch(Exception ex) 
+            catch (System.Net.Sockets.SocketException ex)
+            {
+                System.Windows.Forms.MessageBox.Show("서버와 연결을 실패했습니다.\n자세한 정보는 공지사항을 확인해주세요", "연결 실패", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                Console.WriteLine(ex.Message);
+            }
+            catch (OperationCanceledException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                this.Close();
+            }
+            finally
+            {
+                Close();
             }
         }
         private void DisconnectToLoginServer()
         {
             LoginCancellationTokenSource.Cancel();
-            LoginClientSocket.Shutdown(SocketShutdown.Both);
             LoginClientSocket.Close();
             MessageDataProcess.Cancel();
         }
@@ -66,7 +83,7 @@ namespace LoginClient
         }
         private void RecvData(CancellationToken Cancled)
         {
-            while(!Cancled.IsCancellationRequested) 
+            while (!Cancled.IsCancellationRequested)
             {
                 LoginClientSocket.Receive(SocketBuffer);
                 ProcessData(ref SocketBuffer);
@@ -75,6 +92,16 @@ namespace LoginClient
         private void ProcessData(ref byte[] ReceivedData)
         {
             MessageDataProcess.BufferToMessageQueue(ref ReceivedData);
+        }
+
+        private void MainFormClosing(object sender, FormClosingEventArgs e)
+        {
+            DisconnectToLoginServer();
+        }
+        public void LoginSuccess()
+        {
+            LoginButton.Text = "로그아웃";
+            IsLogOn = true;
         }
     }
 
