@@ -10,17 +10,17 @@ using System.Windows.Forms;
 
 namespace LoginClient
 {
-    public static class MessageDataProcess
+    public class MessageDataProcess
     {
-        private static BlockingCollection<LoginSendToClientMessagePacket> LoginMessageQueue = new BlockingCollection<LoginSendToClientMessagePacket>();
-        private readonly static CancellationTokenSource CancelProgress = new CancellationTokenSource();
-        private static LoginClient MasterForm;
+        private BlockingCollection<LoginSendToClientMessagePacket> LoginMessageQueue = new BlockingCollection<LoginSendToClientMessagePacket>();
+        private readonly CancellationTokenSource CancelProgress = new CancellationTokenSource();
+        private LoginClient MainForm;
 
-        public static void InitMessageDataProcess(LoginClient LoginForm)
+        public void InitMessageDataProcess(LoginClient LoginForm)
         {
-            MasterForm = LoginForm;
+            MainForm = LoginForm;
         }
-        public static void BufferToMessageQueue(ref byte[] ReceivedData)
+        public void BufferToMessageQueue(ref byte[] ReceivedData)
         {
 
             LoginSendToClientMessagePacket Msg;
@@ -35,7 +35,7 @@ namespace LoginClient
                 MessageBox.Show("Msg is null");
             }
         }
-        private static void ProcessMessage()
+        private void ProcessMessage()
         {
             if (LoginMessageQueue == null) return;
             try
@@ -51,6 +51,9 @@ namespace LoginClient
                         case LOGIN_SERVER_PACKET_ID.LOGIN_SERVER_LOGIN_RESULT :
                             Func_Login_Result(TempPacket);
                             break;
+                        case LOGIN_SERVER_PACKET_ID.LOGIN_SERVER_LOGOUT_RESULT:
+                            Func_LogOut_Result(TempPacket);
+                            break;
                     }
 
                 }
@@ -61,7 +64,7 @@ namespace LoginClient
             }
         }
 
-        public static async Task Run()
+        public async Task Run()
         {
             await Task.Run(() =>
             {
@@ -72,13 +75,13 @@ namespace LoginClient
             }, CancelProgress.Token);
         }
 
-        public static void Cancel()
+        public void Cancel()
         {
             CancelProgress.Cancel();
             LoginMessageQueue?.CompleteAdding();
         }
 
-        private static void Func_Login_Result(LoginSendToClientMessagePacket Packet)
+        private void Func_Login_Result(LoginSendToClientMessagePacket Packet)
         {
             switch (Packet.IntegerValue1) 
             {
@@ -89,13 +92,28 @@ namespace LoginClient
                     MessageBox.Show("ID랑 비밀번호가 일치하지 않습니다.");
                     break;
                 case 2:
-                    MasterForm.LoginInputDlg.Close();
-                    MasterForm.LoginSuccess();
+                    MainForm.LoginInputDlg.Close();
+                    MainForm.SetNickName(Packet.StringValue1);
+                    MainForm.LoginSuccess();
                     break;
                 default :
                     MessageBox.Show("알수 없는 버그");
                     break;
 
+            }
+        }
+
+        private void Func_LogOut_Result(LoginSendToClientMessagePacket Packet)
+        {
+            switch (Packet.IntegerValue1)
+            {
+                case 0:
+                    MessageBox.Show("로그아웃 되었습니다.");
+                    MainForm.LogOutSuccess();
+                    break;
+                default:
+                    MessageBox.Show("알수 없는 버그");
+                    break;
             }
         }
 

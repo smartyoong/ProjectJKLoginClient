@@ -25,6 +25,10 @@ namespace LoginClient
         {
             string IDString = IDTextBox.Text;
             string PWString = PWTextBox.Text;
+            LoginClient MainForm = (LoginClient)this.Owner;
+            if (MainForm == null)
+                return;
+
             if (IDString != null && PWString != null)
             {
                 if (!CheckPasswordValid(PWString))
@@ -33,8 +37,7 @@ namespace LoginClient
                 Packet.StringValue1 = IDString;
                 Packet.StringValue2 = PWString;
                 Packet.IDNum = LOGIN_CLIENT_PACKET_ID.LOGIN_CLIENT_TRY_LOGIN;
-                byte[] DataByte = SocketDataSerializer.Serialize<LoginMessagePacket>(Packet);
-                LoginClient MainForm = (LoginClient)this.Owner;
+                byte[] DataByte = SocketDataSerializer.Serialize(Packet);
                 if (MainForm != null)
                 {
                     MainForm.SendSocketData(ref DataByte);

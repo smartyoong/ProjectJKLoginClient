@@ -15,6 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace LoginClient
 {
@@ -23,22 +24,32 @@ namespace LoginClient
         const int BufferSize = 1024;
         bool IsLogOn = false;
         byte[] SocketBuffer = new byte[BufferSize];
-        private static CancellationTokenSource LoginCancellationTokenSource;
+        private CancellationTokenSource LoginCancellationTokenSource;
         public LoginInputForm LoginInputDlg = new LoginInputForm();
+        private MessageDataProcess PacketProccessor = new MessageDataProcess();
+        private string MyNickName = string.Empty;
         public LoginClient()
         {
             InitializeComponent();
             LoginCancellationTokenSource = new CancellationTokenSource();
-            MessageDataProcess.InitMessageDataProcess(this);
+            PacketProccessor.InitMessageDataProcess(this);
             ConnectToLoginServer();
         }
 
         private void LoginButton_Click(object sender, EventArgs e)
         {
-            if(!IsLogOn) 
+            if (!IsLogOn)
             {
                 LoginInputDlg.Owner = this;
                 LoginInputDlg.ShowDialog();
+            }
+            else
+            {
+                LoginMessagePacket Packet = new LoginMessagePacket();
+                Packet.StringValue1 = MyNickName;
+                Packet.IDNum = LOGIN_CLIENT_PACKET_ID.LOGIN_CLIENT_TRY_LOGOUT;
+                byte[] DataByte = SocketDataSerializer.Serialize(Packet);
+                SendSocketData(ref DataByte);
             }
         }
         private async void ConnectToLoginServer()
@@ -49,7 +60,7 @@ namespace LoginClient
             try
             {
                 LoginClientSocket.Connect(IPEnd);
-                Task MessageTask = MessageDataProcess.Run();
+                Task MessageTask = PacketProccessor.Run();
                 Task RecvTask = Task.Run(() => RecvData(LoginCancellationTokenSource.Token), LoginCancellationTokenSource.Token);
                 await Task.WhenAll(RecvTask, MessageTask);
             }
@@ -75,7 +86,7 @@ namespace LoginClient
         {
             LoginCancellationTokenSource.Cancel();
             LoginClientSocket.Close();
-            MessageDataProcess.Cancel();
+            PacketProccessor.Cancel();
         }
         public int SendSocketData(ref byte[] data)
         {
@@ -91,7 +102,7 @@ namespace LoginClient
         }
         private void ProcessData(ref byte[] ReceivedData)
         {
-            MessageDataProcess.BufferToMessageQueue(ref ReceivedData);
+            PacketProccessor.BufferToMessageQueue(ref ReceivedData);
         }
 
         private void MainFormClosing(object sender, FormClosingEventArgs e)
@@ -102,41 +113,16 @@ namespace LoginClient
         {
             LoginButton.Text = "로그아웃";
             IsLogOn = true;
+            MessageBox.Show($"{MyNickName}님 환영합니다!");
         }
-    }
-
-    [Serializable]
-    public class LoginMessagePacket
-    {
-        // 변수는 아무렇게나 추가 가능
-        public Socket ResponeSocket { get; set; }
-        public LOGIN_CLIENT_PACKET_ID IDNum { get; set; }
-        public string StringValue1 { get; set; } = null;
-        public string StringValue2 { get; set; } = null;
-        public int IntegerValue1 { get; set; } = 0;
-    }
-
-    [Serializable]
-    public class LoginSendToClientMessagePacket
-    {
-        // 변수는 아무렇게나 추가 가능
-        public LOGIN_SERVER_PACKET_ID IDNum { get; set; }
-        public string StringValue1 { get; set; } = null;
-        public string StringValue2 { get; set; } = null;
-        public int IntegerValue1 { get; set; } = 0;
-    }
-
-    public static class SocketDataSerializer
-    {
-        public static byte[] Serialize<T>(T obj)
+        public void SetNickName(string NickName)
         {
-            return JsonSerializer.SerializeToUtf8Bytes(obj);
+            MyNickName = NickName;
         }
-
-        public static T DeSerialize<T>(byte[] data)
+        public void LogOutSuccess()
         {
-            var ByteData = new Utf8JsonReader(data);
-            return JsonSerializer.Deserialize<T>(ref ByteData);
+            LoginButton.Text = "로그인";
+            IsLogOn = false;
         }
     }
 }
