@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -54,9 +55,19 @@ namespace LoginClient
                         case LOGIN_SERVER_PACKET_ID.LOGIN_SERVER_LOGOUT_RESULT:
                             Func_LogOut_Result(TempPacket);
                             break;
+                        case LOGIN_SERVER_PACKET_ID.LOGIN_SERVER_REGIST_RESULT:
+                            Func_Regist_Result(TempPacket);
+                            break;
+                        case LOGIN_SERVER_PACKET_ID.LOGIN_SERVER_CHECK_ID_UNIQUE_RESULT: 
+                            Func_Check_ID_Result(TempPacket); 
+                            break;
                     }
 
                 }
+            }
+            catch (OperationCanceledException ex)
+            {
+                Console.WriteLine(ex.Message);
             }
             catch (Exception ex)
             {
@@ -117,5 +128,35 @@ namespace LoginClient
             }
         }
 
+        private void Func_Regist_Result(LoginSendToClientMessagePacket Packet)
+        {
+
+        }
+
+        private void Func_Check_ID_Result(LoginSendToClientMessagePacket Packet)
+        {
+            switch (Packet.IntegerValue1)
+            {
+                case -1:
+                    if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows) && OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+                    {
+                        SystemSounds.Beep.Play();
+                    }
+                    MessageBox.Show("해당 ID는 이미 사용중입니다.", "ID 중복.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+                case 0:
+                    if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows) && OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+                    {
+                        SystemSounds.Asterisk.Play();
+                    }
+                    MessageBox.Show("해당 ID 사용 가능", "ID 사용 가능", MessageBoxButtons.OK, MessageBoxIcon.None);
+                    if(MainForm.LoginInputDlg.GetRegistAccountForm() != null)
+                        MainForm.LoginInputDlg.GetRegistAccountForm().CheckIDOK();
+                    break;
+                default:
+                    MessageBox.Show("알수 없는 버그");
+                    break;
+            }
+        }
     }
 }

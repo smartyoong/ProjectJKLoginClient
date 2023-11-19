@@ -94,6 +94,7 @@
             RegistButton.TabIndex = 5;
             RegistButton.Text = "회원가입";
             RegistButton.UseVisualStyleBackColor = true;
+            RegistButton.Click += RegistAccountClick;
             // 
             // LoginInputForm
             // 

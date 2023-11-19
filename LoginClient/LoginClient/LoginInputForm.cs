@@ -15,6 +15,7 @@ namespace LoginClient
     public partial class LoginInputForm : Form
     {
         private System.Windows.Forms.ToolTip CapsLockToolTip = new System.Windows.Forms.ToolTip();
+        private RegistAccountForm RegistAccountDlg = new RegistAccountForm();
         public LoginInputForm()
         {
             InitializeComponent();
@@ -66,6 +67,16 @@ namespace LoginClient
         private void PWTextBox_Leave(object sender, EventArgs e)
         {
             CapsLockToolTip.Hide(PWTextBox);
+        }
+
+        private void RegistAccountClick(object sender, EventArgs e)
+        {
+            Visible = false;
+            RegistAccountDlg.ShowDialog(this);
+        }
+        public RegistAccountForm GetRegistAccountForm() 
+        {
+            return RegistAccountDlg;
         }
     }
 }

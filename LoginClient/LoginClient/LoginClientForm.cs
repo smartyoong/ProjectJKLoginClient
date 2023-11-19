@@ -96,8 +96,19 @@ namespace LoginClient
         {
             while (!Cancled.IsCancellationRequested)
             {
-                LoginClientSocket.Receive(SocketBuffer);
-                ProcessData(ref SocketBuffer);
+                try
+                {
+                    LoginClientSocket.Receive(SocketBuffer);
+                    ProcessData(ref SocketBuffer);
+                }
+                catch (SocketException ex)
+                {
+                    Console.WriteLine($"SocketException: {ex.Message}");
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
         private void ProcessData(ref byte[] ReceivedData)
