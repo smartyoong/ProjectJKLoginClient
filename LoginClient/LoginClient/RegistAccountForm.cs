@@ -59,5 +59,10 @@ namespace LoginClient
         {
             IsIDUnique = false;
         }
+
+        private void RegistAccountCancelClick(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }

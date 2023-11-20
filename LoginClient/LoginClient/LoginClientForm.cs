@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -98,16 +99,31 @@ namespace LoginClient
             {
                 try
                 {
-                    LoginClientSocket.Receive(SocketBuffer);
+                    if(LoginClientSocket.Receive(SocketBuffer) <= 0)
+                    {
+                        if (MessageBox.Show("서버와 연결이 종료되었습니다.", "연결 끊김", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
+                        {
+                            Close();
+                        }
+                    }
                     ProcessData(ref SocketBuffer);
                 }
                 catch (SocketException ex)
                 {
-                    Console.WriteLine($"SocketException: {ex.Message}");
+                    if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows) && OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+                    {
+                        SystemSounds.Beep.Play();
+                    }
+                    if(MessageBox.Show("서버와 연결이 종료되었습니다.", "연결 끊김", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
+                    {
+                        Close();
+                    }
+                    Console.WriteLine(ex.Message);
                 }
                 catch(Exception ex)
                 {
                     MessageBox.Show(ex.Message);
+                    Close();
                 }
             }
         }

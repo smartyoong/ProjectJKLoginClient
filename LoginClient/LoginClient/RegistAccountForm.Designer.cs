@@ -115,6 +115,7 @@
             RegistCancelButton.TabIndex = 8;
             RegistCancelButton.Text = "취소";
             RegistCancelButton.UseVisualStyleBackColor = true;
+            RegistCancelButton.Click += RegistAccountCancelClick;
             // 
             // RegistAccountForm
             // 

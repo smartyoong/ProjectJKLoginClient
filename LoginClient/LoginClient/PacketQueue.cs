@@ -142,7 +142,7 @@ namespace LoginClient
                     {
                         SystemSounds.Beep.Play();
                     }
-                    MessageBox.Show("해당 ID는 이미 사용중입니다.", "ID 중복.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("해당 ID는 이미 사용중입니다.", "ID 중복", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case 0:
                     if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows) && OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
