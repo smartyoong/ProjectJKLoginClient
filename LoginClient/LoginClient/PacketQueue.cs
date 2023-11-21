@@ -97,15 +97,18 @@ namespace LoginClient
             switch (Packet.IntegerValue1) 
             {
                 case 0:
-                    MessageBox.Show("일치하는 계정 정보가 없습니다.");
+                    MessageBox.Show("일치하는 계정 정보가 없습니다.", "로그인 실패", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case 1:
-                    MessageBox.Show("ID랑 비밀번호가 일치하지 않습니다.");
+                    MessageBox.Show("ID랑 비밀번호가 일치하지 않습니다.", "로그인 실패", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case 2:
                     MainForm.LoginInputDlg.Close();
                     MainForm.SetNickName(Packet.StringValue1);
                     MainForm.LoginSuccess();
+                    break;
+                case 3 :
+                    MessageBox.Show("이미 로그인 되어있습니다.","로그인 실패",MessageBoxButtons.OK,MessageBoxIcon.Error);
                     break;
                 default :
                     MessageBox.Show("알수 없는 버그");
