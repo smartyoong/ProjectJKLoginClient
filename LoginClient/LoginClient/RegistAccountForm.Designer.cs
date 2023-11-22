@@ -63,6 +63,8 @@
             PasswordTextBox.Name = "PasswordTextBox";
             PasswordTextBox.Size = new System.Drawing.Size(265, 23);
             PasswordTextBox.TabIndex = 2;
+            PasswordTextBox.Enter += PasswordBoxEnter;
+            PasswordTextBox.Leave += PasswordBoxLeave;
             // 
             // PasswordCheckTextBox
             // 
@@ -106,6 +108,7 @@
             RegistTryButton.TabIndex = 7;
             RegistTryButton.Text = "회원가입";
             RegistTryButton.UseVisualStyleBackColor = true;
+            RegistTryButton.Click += TryRegistClick;
             // 
             // RegistCancelButton
             // 

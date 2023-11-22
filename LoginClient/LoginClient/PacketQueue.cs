@@ -111,9 +111,8 @@ namespace LoginClient
                     MessageBox.Show("이미 로그인 되어있습니다.","로그인 실패",MessageBoxButtons.OK,MessageBoxIcon.Error);
                     break;
                 default :
-                    MessageBox.Show("알수 없는 버그");
+                    MessageBox.Show("알수 없는 버그", "로그인 실패", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
-
             }
         }
 
@@ -126,14 +125,34 @@ namespace LoginClient
                     MainForm.LogOutSuccess();
                     break;
                 default:
-                    MessageBox.Show("알수 없는 버그");
+                    MessageBox.Show("알수 없는 버그", "로그아웃 실패", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
             }
         }
 
         private void Func_Regist_Result(LoginSendToClientMessagePacket Packet)
         {
-
+            switch (Packet.IntegerValue1)
+            {
+                case 0:
+                    if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows) && OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+                    {
+                        SystemSounds.Beep.Play();
+                    }
+                    MessageBox.Show("회원가입 성공! 로그인해주세요.", "회원 가입 성공", MessageBoxButtons.OK);
+                    if (MainForm.LoginInputDlg.GetRegistAccountForm() != null)
+                        MainForm.LoginInputDlg.GetRegistAccountForm().Close();
+                    break;
+                case -1:
+                    MessageBox.Show("ID가 이미 존재합니다.", "회원가입 실패", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+                case -2:
+                    MessageBox.Show("회원등록중에 오류가 발생하였습니다.", "회원가입 실패", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+                default:
+                    MessageBox.Show("알수 없는 버그", "회원가입 실패", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+            }
         }
 
         private void Func_Check_ID_Result(LoginSendToClientMessagePacket Packet)

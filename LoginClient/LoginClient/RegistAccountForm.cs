@@ -6,17 +6,22 @@ using System.Drawing;
 using System.Linq;
 using System.Media;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace LoginClient
 {
     public partial class RegistAccountForm : Form
     {
+        private System.Windows.Forms.ToolTip PasswordToolTip = new System.Windows.Forms.ToolTip();
         public RegistAccountForm()
         {
             InitializeComponent();
+            PasswordTextBox.PasswordChar = '●';
+            PasswordCheckTextBox.PasswordChar = '●';
         }
 
         private void RegistAccountClosing(object sender, FormClosingEventArgs e)
@@ -63,6 +68,54 @@ namespace LoginClient
         private void RegistAccountCancelClick(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void TryRegistClick(object sender, EventArgs e)
+        {
+            if(!IsIDUnique) 
+            {
+                MessageBox.Show("다른 ID를 사용해주세요.", "아이디 오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (!CheckPasswordValid(PasswordTextBox.Text))
+            {
+                MessageBox.Show("비밀번호 형식이 유효하지 않습니다.", "비밀번호 오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (PasswordTextBox.Text != PasswordCheckTextBox.Text)
+            {
+                MessageBox.Show("비밀번호가 일치하지 않습니다.", "비밀번호 오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            LoginMessagePacket Packet = new LoginMessagePacket();
+            Packet.StringValue1 = IDTextBox.Text;
+            Packet.StringValue2 = PasswordTextBox.Text;
+            Packet.IDNum = LOGIN_CLIENT_PACKET_ID.LOGIN_CLIENT_TRY_REGIST;
+            byte[] DataByte = SocketDataSerializer.Serialize(Packet);
+            LoginClient MainForm = (LoginClient)Owner.Owner;
+            if (MainForm != null)
+            {
+                MainForm.SendSocketData(ref DataByte);
+            }
+        }
+        private bool CheckPasswordValid(string PW)
+        {
+            string Pattern = "^[a-zA-Z0-9!@#$%]{8,16}$";
+            if (!Regex.IsMatch(PW, Pattern))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private void PasswordBoxEnter(object sender, EventArgs e)
+        {
+            PasswordToolTip.Show("비밀번호는 길이가 8에서 16 사이이며, 소문자, 대문자, 숫자, 그리고 특수 문자 !, @, #, $, %만 가능합니다.", PasswordTextBox, 0, PasswordTextBox.Height, 5000);
+        }
+
+        private void PasswordBoxLeave(object sender, EventArgs e)
+        {
+            PasswordToolTip.Hide(PasswordTextBox);
         }
     }
 }

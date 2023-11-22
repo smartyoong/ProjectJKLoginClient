@@ -23,6 +23,7 @@ namespace LoginClient
     public partial class LoginClient : Form
     {
         const int BufferSize = 1024;
+        bool CloseClient = false;
         bool IsLogOn = false;
         byte[] SocketBuffer = new byte[BufferSize];
         private CancellationTokenSource LoginCancellationTokenSource;
@@ -85,6 +86,7 @@ namespace LoginClient
         }
         private void DisconnectToLoginServer()
         {
+            CloseClient = true;
             LoginCancellationTokenSource.Cancel();
             LoginClientSocket.Close();
             PacketProccessor.Cancel();
@@ -101,24 +103,30 @@ namespace LoginClient
                 {
                     if(LoginClientSocket.Receive(SocketBuffer) <= 0)
                     {
-                        if (MessageBox.Show("서버와 연결이 종료되었습니다.", "연결 끊김", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
+                        if(!CloseClient)
                         {
-                            Close();
+                            if (MessageBox.Show("서버와 연결이 종료되었습니다.", "연결 끊김", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
+                            {
+                                Close();
+                            }
                         }
                     }
                     ProcessData(ref SocketBuffer);
                 }
                 catch (SocketException ex)
                 {
-                    if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows) && OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+                    if(!CloseClient)
                     {
-                        SystemSounds.Beep.Play();
+                        if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows) && OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+                        {
+                            SystemSounds.Beep.Play();
+                        }
+                        if (MessageBox.Show("서버와 연결이 종료되었습니다.", "연결 끊김", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
+                        {
+                            Close();
+                        }
+                        Console.WriteLine(ex.Message);
                     }
-                    if(MessageBox.Show("서버와 연결이 종료되었습니다.", "연결 끊김", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
-                    {
-                        Close();
-                    }
-                    Console.WriteLine(ex.Message);
                 }
                 catch(Exception ex)
                 {
