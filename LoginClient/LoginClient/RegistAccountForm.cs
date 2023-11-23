@@ -31,7 +31,9 @@ namespace LoginClient
 
         private void RegistAccountClose(object sender, FormClosedEventArgs e)
         {
-
+            IDTextBox.Text = string.Empty;
+            PasswordTextBox.Text = string.Empty;
+            PasswordCheckTextBox.Text = string.Empty;
         }
 
         private void IDCheckClick(object sender, EventArgs e)
@@ -74,7 +76,7 @@ namespace LoginClient
         {
             if(!IsIDUnique) 
             {
-                MessageBox.Show("다른 ID를 사용해주세요.", "아이디 오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("ID 중복을 확인해주세요.", "아이디 오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             if (!CheckPasswordValid(PasswordTextBox.Text))
@@ -82,7 +84,7 @@ namespace LoginClient
                 MessageBox.Show("비밀번호 형식이 유효하지 않습니다.", "비밀번호 오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if (PasswordTextBox.Text != PasswordCheckTextBox.Text)
+            if (!string.Equals(PasswordTextBox.Text, PasswordCheckTextBox.Text))
             {
                 MessageBox.Show("비밀번호가 일치하지 않습니다.", "비밀번호 오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;

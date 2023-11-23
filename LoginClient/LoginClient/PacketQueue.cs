@@ -121,6 +121,10 @@ namespace LoginClient
             switch (Packet.IntegerValue1)
             {
                 case 0:
+                    if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows) && OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+                    {
+                        SystemSounds.Beep.Play();
+                    }
                     MessageBox.Show("로그아웃 되었습니다.");
                     MainForm.LogOutSuccess();
                     break;

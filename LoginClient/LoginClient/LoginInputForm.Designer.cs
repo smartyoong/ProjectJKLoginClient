@@ -110,6 +110,7 @@
             Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             Name = "LoginInputForm";
             Text = "LoginInputForm";
+            FormClosed += LoginInputFormClose;
             ResumeLayout(false);
             PerformLayout();
         }

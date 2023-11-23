@@ -148,6 +148,10 @@ namespace LoginClient
         {
             LoginButton.Text = "로그아웃";
             IsLogOn = true;
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows) && OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+            {
+                SystemSounds.Beep.Play();
+            }
             MessageBox.Show($"{MyNickName}님 환영합니다!");
         }
         public void SetNickName(string NickName)

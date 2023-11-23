@@ -30,7 +30,7 @@ namespace LoginClient
             if (MainForm == null)
                 return;
 
-            if (IDString != null && PWString != null)
+            if (!string.IsNullOrEmpty(IDString) && !string.IsNullOrEmpty(PWString))
             {
                 if (!CheckPasswordValid(PWString))
                     return;
@@ -74,9 +74,15 @@ namespace LoginClient
             Visible = false;
             RegistAccountDlg.ShowDialog(this);
         }
-        public RegistAccountForm GetRegistAccountForm() 
+        public RegistAccountForm GetRegistAccountForm()
         {
             return RegistAccountDlg;
+        }
+
+        private void LoginInputFormClose(object sender, FormClosedEventArgs e)
+        {
+            IDTextBox.Text = string.Empty;
+            PWTextBox.Text = string.Empty;
         }
     }
 }
