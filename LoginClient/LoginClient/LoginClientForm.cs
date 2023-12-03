@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using LoginClient.Properties;
 
 namespace LoginClient
 {
@@ -57,8 +58,8 @@ namespace LoginClient
         private async void ConnectToLoginServer()
         {
             LoginClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPAddress IPAddr = IPAddress.Parse("115.136.46.23");
-            IPEndPoint IPEnd = new IPEndPoint(IPAddr, 11220);
+            IPAddress IPAddr = IPAddress.Parse(Settings.Default.LoginServerIP);
+            IPEndPoint IPEnd = new IPEndPoint(IPAddr, Settings.Default.LoginServerPort);
             try
             {
                 LoginClientSocket.Connect(IPEnd);
