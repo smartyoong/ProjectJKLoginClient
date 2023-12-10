@@ -61,6 +61,10 @@ namespace LoginClient
                         case LOGIN_SERVER_PACKET_ID.LOGIN_SERVER_CHECK_ID_UNIQUE_RESULT: 
                             Func_Check_ID_Result(TempPacket); 
                             break;
+                        case LOGIN_SERVER_PACKET_ID.LOGIN_SERVER_GOTO_GATE_RESULT:
+                            Func_Gate_Info_Result(TempPacket);
+                            break;
+
                     }
 
                 }
@@ -183,6 +187,11 @@ namespace LoginClient
                     MessageBox.Show("알수 없는 버그");
                     break;
             }
+        }
+        private void Func_Gate_Info_Result(LoginSendToClientMessagePacket Packet)
+        {
+            MessageBox.Show($"{Packet.StringValue1} {Packet.IntegerValue1}");
+            // 추후 게이트와 연결 구현할것
         }
     }
 }

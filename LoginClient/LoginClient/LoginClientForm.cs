@@ -102,9 +102,9 @@ namespace LoginClient
             {
                 try
                 {
-                    if(LoginClientSocket.Receive(SocketBuffer) <= 0)
+                    if (LoginClientSocket.Receive(SocketBuffer) <= 0)
                     {
-                        if(!CloseClient)
+                        if (!CloseClient)
                         {
                             if (MessageBox.Show("서버와 연결이 종료되었습니다.", "연결 끊김", MessageBoxButtons.OK, MessageBoxIcon.Error) == DialogResult.OK)
                             {
@@ -116,7 +116,7 @@ namespace LoginClient
                 }
                 catch (SocketException ex)
                 {
-                    if(!CloseClient)
+                    if (!CloseClient)
                     {
                         if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows) && OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
                         {
@@ -129,7 +129,7 @@ namespace LoginClient
                         Console.WriteLine(ex.Message);
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
                     Close();
@@ -163,6 +163,20 @@ namespace LoginClient
         {
             LoginButton.Text = "로그인";
             IsLogOn = false;
+        }
+
+        private void GameStartButtonClick(object sender, EventArgs e)
+        {
+            if(!IsLogOn)
+            {
+                MessageBox.Show("로그인을 먼저 해주십시오.","에러",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                return;
+            }
+            LoginMessagePacket Packet = new LoginMessagePacket();
+            Packet.StringValue1 = MyNickName;
+            Packet.IDNum = LOGIN_CLIENT_PACKET_ID.LOGIN_CLIENT_GOTO_GATE;
+            byte[] DataByte = SocketDataSerializer.Serialize(Packet);
+            SendSocketData(ref DataByte);
         }
     }
 }

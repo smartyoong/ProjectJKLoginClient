@@ -43,18 +43,20 @@ namespace LoginClient
         }
     }
 
-public enum LOGIN_CLIENT_PACKET_ID : uint
+    public enum LOGIN_CLIENT_PACKET_ID : uint
     {
         LOGIN_CLIENT_TRY_LOGIN = 0,
         LOGIN_CLIENT_TRY_LOGOUT = 1,
         LOGIN_CLIENT_TRY_REGIST = 2,
-        LOGIN_CLIENT_CHECK_ID_UNIQUE = 3
+        LOGIN_CLIENT_CHECK_ID_UNIQUE = 3,
+        LOGIN_CLIENT_GOTO_GATE = 4
     }
     public enum LOGIN_SERVER_PACKET_ID : uint
     {
         LOGIN_SERVER_LOGIN_RESULT = 0,
         LOGIN_SERVER_LOGOUT_RESULT = 1,
         LOGIN_SERVER_REGIST_RESULT = 2,
-        LOGIN_SERVER_CHECK_ID_UNIQUE_RESULT = 3
+        LOGIN_SERVER_CHECK_ID_UNIQUE_RESULT = 3,
+        LOGIN_SERVER_GOTO_GATE_RESULT = 4
     }
 }

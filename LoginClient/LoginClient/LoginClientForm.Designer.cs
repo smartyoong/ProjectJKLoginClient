@@ -70,6 +70,7 @@ namespace LoginClient
             GameStartButton.TabIndex = 2;
             GameStartButton.Text = "게임시작";
             GameStartButton.UseVisualStyleBackColor = true;
+            GameStartButton.Click += GameStartButtonClick;
             // 
             // webBrowser1
             // 
