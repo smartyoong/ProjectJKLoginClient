@@ -43,6 +43,12 @@ namespace LoginClient
         }
     }
 
+    [Serializable]
+    public class ClientConnectGateServerTry
+    {
+        public string UserName { get; set; } = string.Empty;
+    }
+
     public enum LOGIN_CLIENT_PACKET_ID : uint
     {
         LOGIN_CLIENT_TRY_LOGIN = 0,
@@ -58,5 +64,9 @@ namespace LoginClient
         LOGIN_SERVER_REGIST_RESULT = 2,
         LOGIN_SERVER_CHECK_ID_UNIQUE_RESULT = 3,
         LOGIN_SERVER_GOTO_GATE_RESULT = 4
+    }
+    public enum CLIENT_TO_GATE_PACKET_ID : ushort
+    {
+        ID_NEW_USER_TRY_CONNECT = 0
     }
 }
